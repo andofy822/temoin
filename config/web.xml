@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                      https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+  version="6.0"
+  metadata-complete="true">
+<display-name>test</display-name>
+<context-param>
+  <param-name>chemin</param-name>
+  <param-value>controlleur</param-value>
+</context-param>
+<context-param>
+    <param-name>RoleAttributName</param-name>
+    <param-value>role</param-value>
+</context-param>
+<context-param>
+    <param-name>RoleAttributValidation</param-name>
+    <param-value>validate</param-value>
+</context-param>
+<servlet> 
+  <servlet-name>Front</servlet-name> 
+  <servlet-class>controller.front.FrontController</servlet-class> 
+</servlet>
+<servlet-mapping> 
+  <servlet-name>Front</servlet-name> 
+  <url-pattern>/home/*</url-pattern> 
+</servlet-mapping>  
+</web-app>
