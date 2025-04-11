@@ -14,7 +14,7 @@
 </head>
 <body>
     <header class="backoffice-header">
-        <h1>Admin - Gestion des Vols</h1>
+        <h1> Gestion des Vols</h1>
         <nav>
             <ul>
                 <li><a href="#gestion-vols">Gestion des Vols</a></li>
