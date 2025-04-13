@@ -90,17 +90,11 @@ public class VolControlleur {
             String role = (String)session.search("role");
             int idVol = vol.insertLiaisonSiegeVol(con);
             if (role.compareToIgnoreCase("admin")==0) {
-                mv = new ModelAndView("/volFormulaire.jsp?body=listeVol.jsp&header=headerAdmin.jsp");
+                mv = new ModelAndView("/home/acceuil");
             }
             else{
-                 mv = new ModelAndView("/volFormulaire.jsp?body=listeVol.jsp&header=headerClient.jsp");
+                 mv = new ModelAndView("/home/acceuil");
             }
-            List<Avion> listeAvion = Avion.getAll(con);
-            List<Ville> listeVille = Ville.getAll(con);
-            List<VolDAOCpl> listeVols = (List<VolDAOCpl>)VolDAOCpl.getAllVolsAvecPrix(con);
-            mv.AddOject("listeVols", listeVols);
-            mv.AddOject("listeAvion", listeAvion);
-            mv.AddOject("listeVille", listeVille);
         } catch (Exception e) {
             e.printStackTrace();
         }

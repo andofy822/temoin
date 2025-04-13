@@ -19,7 +19,7 @@ public class PromotionControlleur {
         ModelAndView mv = null;
         try (Connection con = Connexion.getConn()){      
             String role = (String)session.search("role");
-            mv = new ModelAndView("/home/listeVol");
+            mv = new ModelAndView("/home/acceuil");
             promotionDAO.insertPromotion(con);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +33,7 @@ public class PromotionControlleur {
         ModelAndView mv = null;
         try (Connection con = Connexion.getConn()){      
             String role = (String)session.search("role");
-            mv = new ModelAndView("/home/listeVol");
+            mv = new ModelAndView("/home/acceuil");
             promotionDAO.insertAnnulation(con);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class PromotionControlleur {
         ModelAndView mv = null;
         try (Connection con = Connexion.getConn()){      
             String role = (String)session.search("role");
-            mv = new ModelAndView("/home/listeVol");
+            mv = new ModelAndView("/home/acceuil");
             promotionDAO.insertReservation(con);
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,12 +2,12 @@
 setlocal enabledelayedexpansion
 
 :: Déclaration des variables
-set "work_dir=D:\Webdynamique\temoin"
+set "work_dir=C:\Users\user\Documents\GitHub\temoin"
 set "temp=%work_dir%\temp"
 set "web=%work_dir%\web"
 set "config_xml=%work_dir%\config"
 set "lib=%work_dir%\lib"
-set "web_apps=C:\tomcat\webapps"
+set "web_apps=E:\tomcat\webapps"
 set "war_name=temoin"
 set "src=%work_dir%\src"
 

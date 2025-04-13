@@ -87,8 +87,9 @@ public class ReservationDAO {
         }
         return false;
     }
+   
     public boolean insertReservation(Connection connection) {
-        String sql = "INSERT INTO reservation (idUtilisateur, idVol, datyheure, passport, statut, place, prix) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation (idUtilisateur, idVol, datyheure, passport, statut, place, prix,typesiege) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, idUtilisateur);
             pstmt.setInt(2, idVol);
@@ -96,7 +97,8 @@ public class ReservationDAO {
             pstmt.setBytes(4, passport.getFileContent());
             pstmt.setInt(5, statut);
             pstmt.setInt(6, place);
-            pstmt.setDouble(7, prix);  
+            pstmt.setDouble(7, prix);
+            pstmt.setInt(8, typesiege);  
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -112,11 +114,12 @@ public class ReservationDAO {
         return false;
     }
     
-    public List<ReservationDAO> getByVol(int idVol,Connection connection) {
+    public List<ReservationDAO> getByVol(int idVol,int typeSiege,Connection connection) {
         List<ReservationDAO> valiny = new ArrayList<>();
-        String sql = "SELECT * FROM reservation WHERE idVol = ?";
+        String sql = "SELECT * FROM reservation WHERE idVol = ? and typesige = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setInt(1, idVol);
+                pstmt.setInt(2, typeSiege);
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     ReservationDAO reservation = new ReservationDAO();
@@ -185,12 +188,14 @@ public void controler(Connection connection) throws Exception {
             if (this.getDatyheure().after(vol.getDateDepart()) || (this.getDatyheure().compareTo(vol.getDateDepart()) <= 0 && ReservationDAO.calculeDifference(vol.getDateDepart(),this.getDatyheure(),deadline))) {
                 throw new Exception("deadline depasse");                
             }
-            List<ReservationDAO> listeReservationVol = this.getByVol(this.idVol, connection);
+            List<ReservationDAO> listeReservationVol = this.getByVol(this.idVol,this.typesiege, connection);
             double totalPlacePromotion = vol.getNombreSiegePromotion();
             double totalPlace = vol.getNombreTotalSiege();
             int totalReservedSeats = 0;
-            for (ReservationDAO reservation : listeReservationVol) {
-                totalReservedSeats += reservation.getPlace();
+            if (listeReservationVol != null) {
+                for (ReservationDAO reservation : listeReservationVol) {
+                    totalReservedSeats += reservation.getPlace();
+                }   
             }
             if (totalReservedSeats >= totalPlacePromotion && totalReservedSeats < totalPlace) {
                 double prix1 = vol.getPrix() * this.getPlace();

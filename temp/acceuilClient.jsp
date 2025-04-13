@@ -248,11 +248,8 @@
     <nav class="navbar">
         <div class="logo">GestionVols</div>
         <div class="nav-links">
-            <a href="#ajouter-vol">Ajouter un Vol</a>
-            <a href="#liste-vols">Liste des Vols</a>
-            <a href="#liste-promotion">liste Promotion</a>
-            <a href="#liste-heure-annulation">liste heure Annulation</a>
-            <a href="#liste-heure-reservation">liste heure Reservation</a>
+            <a href="#liste-vols">Ajouter un Reservation</a>
+            <a href="#liste-reservation">liste reservation</a>
         </div>
     </nav>
 
@@ -264,57 +261,6 @@
 
     <!-- Contenu principal -->
     <main class="container">
-        <% 
-            List<Ville> Villes=null;
-            List<Avion> Avions=null;
-        %>
-        <%if(request.getAttribute("listeAvion")!=null){%>
-        <% Avions = (List<Avion>)request.getAttribute("listeAvion");%>
-        <%}%>
-        <%if(request.getAttribute("listeVille")!=null){%>
-        <% Villes = (List<Ville>)request.getAttribute("listeVille");%>
-        <%}%>
-
-        <!-- Section Ajouter un Vol -->
-        <section id="ajouter-vol">
-            <h2>Ajouter un nouveau vol</h2>
-            <form class="crud-form" action="<%=request.getContextPath()%>/home/validerInsertVol" method="get">
-                <label for="idAvion">Avion :</label>
-                <select name="vol.idAvion" id="idAvion" required>
-                    <% for (Avion vol : Avions) { %>
-                            <option value="<%=vol.getId()%>"><%=vol.getModele()%></option>
-                    <% } %>
-                </select>
-
-                <label for="idVilleDepart">Ville de départ :</label>
-                <select name="vol.idVilleDepart" id="idVilleDepart" required>
-                    <% for (Ville vol : Villes) { %>
-                            <option value="<%=vol.getId()%>"><%=vol.getVal()%></option>
-                    <% } %>
-                </select>
-
-                <label for="idVilleArrive">Ville d'arrivée :</label>
-                <select name="vol.idVilleArrive" id="idVilleArrive" required>
-                    <% for (Ville vol : Villes) { %>
-                            <option value="<%=vol.getId()%>"><%=vol.getVal()%></option>
-                    <% } %>
-                </select>
-
-                <label for="dateDepart">Date de départ :</label>
-                <input type="datetime-local" name="vol.dateDepart" id="dateDepart" required>
-
-                <label for="dateArrive">Date d'arrivée :</label>
-                <input type="datetime-local" name="vol.dateArrive" id="dateArrive" required>
-
-                <label for="duree">Durée (en secondes) :</label>
-                <input type="number" name="vol.dure" id="dure" required>
-
-                <input type="hidden" name="vol.prix" id="prix" value="0" required>
-                <input type="hidden" name="vol.statut" id="statut" value="1" required>
-
-                <button type="submit">Ajouter le Vol</button>
-            </form>
-        </section>
         <section id="liste-vols">
             <h2>Liste des Vols</h2>
             
@@ -327,12 +273,17 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Avion</th>
-                                <th>Départ</th>
-                                <th>Arrivée</th>
-                                <th>Dates</th>
-                                <th>Durée</th>
+                                <th>Ville Départ</th>
+                                <th>Ville Arrivée</th>
+                                <th>Date Départ</th>
+                                <th>Date Arrivée</th>
+                                <th>Durée (seconde)</th>
                                 <th>Prix</th>
-                                <th>Actions</th>
+                                <th>TypeSiege</th>
+                                <th>Nombre Total Siege</th>
+                                <th>Nombre Siege Promotion</th>
+                                <th>Promotion</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -343,27 +294,22 @@
                                         <td><%= vol.getNomAvion() %></td>
                                         <td><%= vol.getNomVilleDepart() %></td>
                                         <td><%= vol.getNomVilleArrivee() %></td>
-                                        <td>
-                                            <div><strong>Départ:</strong> <%= vol.getDateDepart() %></div>
-                                            <div><strong>Arrivée:</strong> <%= vol.getDateArrive() %></div>
-                                        </td>
-                                        <td><%= vol.getDure() %>s</td>
-                                        <td><%= vol.getPrix() %> Ar</td>
-                                        <td>
-                                            <a href="<%=request.getContextPath()%>/home/promotionForm?idVol=<%=vol.getId()%>&idTypeSiege=<%=vol.getIdtypesiege()%>" 
-                                               class="action-link">Promo</a>
-                                            <a href="<%=request.getContextPath()%>/home/annulationTempsForm?idVol=<%=vol.getId()%>" 
-                                               class="action-link">Annuler</a>
-                                            <a href="<%=request.getContextPath()%>/home/reservationTempsForm?idVol=<%=vol.getId()%>" 
-                                               class="action-link">Réserver</a>
-                                        </td>
+                                        <td><%= vol.getDateDepart() %></td>
+                                        <td><%= vol.getDateArrive() %></td>
+                                        <td><%= vol.getDure() %></td>
+                                        <td><%= vol.getPrix() %></td>
+                                        <td><%= vol.getNomTypeSiege() %></td>
+                                        <td><%= vol.getNombreTotalSiege() %></td>
+                                        <td><%= vol.getNombreSiegePromotion() %></td>
+                                        <td><%= vol.getPromotion() %>%</td>
+                                            <td><a href="<%=request.getContextPath()%>/home/formReservation?idVol=<%=vol.getId()%>">Reserver</a></td>
+                                        </tr>
+                                    <% }
+                                } else { %>
+                                    <tr>
+                                        <td>Aucun vol disponible</td>
                                     </tr>
-                                <% }
-                            } else { %>
-                                <tr>
-                                    <td colspan="8" class="no-data">Aucun vol disponible</td>
-                                </tr>
-                            <% } %>
+                                <% } %>
                         </tbody>
                     </table>
                 </div>
@@ -373,114 +319,43 @@
                 </div>
             <% } %>
         </section>
-        <section id="liste-heure-annulation">
-            <h2>Liste heure Annulation vol</h2>
+        <section id="liste-reservation">
+            <h2>Liste des Vols</h2>
             
-            <% if(request.getAttribute("listeHeureAnnulation") != null) { %>
-                <% List<LiaisonHeureVolDAO> vols = (List<LiaisonHeureVolDAO>) request.getAttribute("listeHeureAnnulation"); %>
+            <% if(request.getAttribute("listeReservation")!=null){ %>
+                <% List<ReservationDAO> vols = (List<ReservationDAO>)request.getAttribute("listeReservation"); %>
                 
                 <div class="table-container">
                     <table class="vols-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>dureavantvol</th>
-                                <th>idvol</th>
+                                <th>Utilisateur</th>
+                                <th>Vol</th>
+                                <th>date de reservation</th>
+                                <th>place</th>
+                                <th>prix</th>
+                                <th>Annulation</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% if (vols != null && !vols.isEmpty()) {
-                                for (LiaisonHeureVolDAO vol : vols) { %>
+                                for (ReservationDAO vol : vols) { %>
                                     <tr>
                                         <td><%= vol.getId() %></td>
-                                        <td><%= vol.getHeure() %></td>
+                                        <td><%= vol.getIdUtilisateur() %></td>
                                         <td><%= vol.getIdVol() %></td>
-                                    </tr>
-                                <% }
-                            } else { %>
-                                <tr>
-                                    <td colspan="8" class="no-data">Aucun vol disponible</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } else { %>
-                <div class="no-data">
-                    <p>Aucune donnée disponible.</p>
-                </div>
-            <% } %>
-        </section>
-        <section id="liste-heure-reservation">
-            <h2>Liste heure reservation vol</h2>
-            
-            <% if(request.getAttribute("listeHeureReservation") != null) { %>
-                <% List<LiaisonHeureVolDAO> vols = (List<LiaisonHeureVolDAO>) request.getAttribute("listeHeureReservation"); %>
-                
-                <div class="table-container">
-                    <table class="vols-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>dureavantvol</th>
-                                <th>idvol</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (vols != null && !vols.isEmpty()) {
-                                for (LiaisonHeureVolDAO vol : vols) { %>
+                                        <td><%= vol.getDatyheure() %></td>
+                                        <td><%= vol.getPlace() %></td>
+                                        <td><%= vol.getPrix() %></td>
+                                        <td><a href="<%=request.getContextPath()%>/home/annulerReservation?idReservation=<%=vol.getId()%>&idVol=<%=vol.getIdVol()%>">Annuler</a></td>
+                                        </tr>
+                                    <% }
+                                } else { %>
                                     <tr>
-                                        <td><%= vol.getId() %></td>
-                                        <td><%= vol.getHeure() %></td>
-                                        <td><%= vol.getIdVol() %></td>
+                                        <td>Aucun vol disponible</td>
                                     </tr>
-                                <% }
-                            } else { %>
-                                <tr>
-                                    <td colspan="8" class="no-data">Aucun vol disponible</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } else { %>
-                <div class="no-data">
-                    <p>Aucune donnée disponible.</p>
-                </div>
-            <% } %>
-        </section>
-
-        <section id="liste-promotion">
-            <h2>Liste heure promotion vol</h2>
-            
-            <% if(request.getAttribute("listeVolPromotion") != null) { %>
-                <% List<LiaisonVolPromotionDAO> vols = (List<LiaisonVolPromotionDAO>) request.getAttribute("listeVolPromotion"); %>
-                
-                <div class="table-container">
-                    <table class="vols-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>siege</th>
-                                <th>idvol</th>
-                                <th>promotion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (vols != null && !vols.isEmpty()) {
-                                for (LiaisonVolPromotionDAO vol : vols) { %>
-                                    <tr>
-                                        <td><%= vol.getId() %></td>
-                                        <td><%= vol.getVal() %></td>
-                                        <td><%= vol.getIdVol() %></td>
-                                        <td><%= vol.getPromotion() %></td>
-                                    </tr>
-                                <% }
-                            } else { %>
-                                <tr>
-                                    <td colspan="8" class="no-data">Aucun vol disponible</td>
-                                </tr>
-                            <% } %>
+                                <% } %>
                         </tbody>
                     </table>
                 </div>
