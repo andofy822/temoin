@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des promotions</title>
+</head>
+<body>
+    <h1>Liste des promotions</h1>
+    <a href="/liaison/create">Ajouter</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Type Homme</th>
+                <th>Promotion (%)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="l : ${liaisons}">
+                <td th:text="${l.id}"></td>
+                <td th:text="${l.idTypeHomme}"></td>
+                <td th:text="${l.promotion}"></td>
+                <td>
+                    <a th:href="@{'/liaison/edit/' + ${l.id}}">Modifier</a> |
+                    <a th:href="@{'/liaison/delete/' + ${l.id}}" onclick="return confirm('Supprimer ?')">Supprimer</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
